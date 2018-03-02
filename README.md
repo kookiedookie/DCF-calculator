@@ -2,5 +2,10 @@
 Singapore Management University 
 
 AY 2017/18 Term 2
+QF205 Computing Tech For Finance Project
 
-QF205 Computing Tech For Finance Project - Discounted Cash Flows programme
+Discounted Cash Flows programme
+
+Created by:
+
+Ng Hao Wei (Sherman) - sherman.ng1@gmail.com
