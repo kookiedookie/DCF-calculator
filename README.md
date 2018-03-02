@@ -9,3 +9,7 @@ Discounted Cash Flows programme
 Created by:
 
 Ng Hao Wei (Sherman) - sherman.ng1@gmail.com
+
+Dylan Chan
+
+Nurul Suhailah
