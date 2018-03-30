@@ -7,13 +7,19 @@ The zip file contains 4 files (excluding this ReadMe): Main.py, Company.py, dcff
 	https://www.python.org/downloads/
 
 2. Install / ensure the following packages are installed:
-	a. pandas
-	b. pandas_datareader
-	c. numpy
-	d. dateutil
-	e. datetime
-	f. sys
-	g. PyQt5
+	1. pandas
+	
+	2. pandas_datareader
+	
+	3. numpy
+	
+	4. dateutil
+	
+	5. datetime
+	
+	6. sys
+	
+	7. PyQt5
 	
 	If you are using Anaconda run the command below for each package in the Anaconda Prompt:
 		
