@@ -2,7 +2,7 @@
 
 The zip file contains 4 files (excluding this ReadMe.txt): Main.py, Company.py, dcffunctions.py, qf205guiProject.ui
 
-#Getting Started
+# Getting Started
 1. Download and install Python from this website:
 	https://www.python.org/downloads/
 
@@ -25,9 +25,9 @@ The zip file contains 4 files (excluding this ReadMe.txt): Main.py, Company.py, 
 			https://pip.pypa.io/en/stable/installing/
 		ii. Run the command below in your terminal to install each package:
 	
-			pip install pandas
-			
-		iii. Repeat step ii for all packages
+		pip install pandas
+		
+	Repeat step ii for all packages
 		
 3. Extract the zip file into a single folder. From your terminal, change the directory to that folder and execute the command below to run the application
 
