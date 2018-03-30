@@ -1,6 +1,6 @@
 ﻿Instructions on operating the DCF calculator application
 
-The zip file contains 4 files (excluding this ReadMe.txt): Main.py, Company.py, dcffunctions.py, qf205guiProject.ui
+The zip file contains 4 files (excluding this ReadMe): Main.py, Company.py, dcffunctions.py, qf205guiProject.ui
 
 # Getting Started
 1. Download and install Python from this website:
