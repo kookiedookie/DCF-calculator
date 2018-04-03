@@ -2,7 +2,7 @@
 
 The zip file contains 4 files (excluding this ReadMe): Main.py, Company.py, dcffunctions.py, qf205guiProject.ui
 
-##### **DISCLAIMER: This calculator is designed to be a informational and educational tool only, and when used alone, do not constitute investment advice. The results presented by this calculator are hypothetical and may not reflect the actual value. We are not responsible for the consequences of any decisions or actions taken in reliance upon or as a result of the information provided by these tools. We are not responsible for any human or mechanical errors or omissions. Use this at your own risk.**
+##### **DISCLAIMER: This calculator is designed to be a informational and educational tool only, and when used alone, do not constitute investment advice. The results presented by this calculator are hypothetical and may not reflect the actual value of stocks. We are not responsible for the consequences of any decisions or actions taken in reliance upon or as a result of the information provided by these tools. We are not responsible for any human or mechanical errors or omissions. Use this at your own risk.**
 
 # Getting Started
 1. Download and install Python from this website:
