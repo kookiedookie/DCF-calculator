@@ -29,9 +29,13 @@ The zip file contains 4 files (excluding this ReadMe): Main.py, Company.py, dcff
 		
 	
 	If you are not using any package manager:
-		i. Install pip by following instructions from this website:
+		
+		
+	i. Install pip by following instructions from this website:
 			https://pip.pypa.io/en/stable/installing/
-		ii. Run the command below in your terminal to install each package:
+	
+	
+	ii. Run the command below in your terminal to install each package:
 	
 		pip install pandas
 		
@@ -44,8 +48,11 @@ The zip file contains 4 files (excluding this ReadMe): Main.py, Company.py, dcff
 	This should open a new window ("MainWindow")
 	
 4. Input the Stockticker, Forecasted Growth Rate (optional) and Perpetual Growth Rate (optional). 'AMZN' is the default value as the stockticker; change this for a different stockticker.
+
 	a. An invalid stockticker will cause the program to crash. Please input valid stocktickers
+
 	b. Forecasted Growth Rate and Perpetual Growth Rate are 0.25 and 0.03 respectively by default
+	
 	c. A invalid input on the growth rates (i.e. text format) will cause the program to crash. Please input valid growth rates
 	
 5. Click 'Calculate'. The code will take some time to run. Occasionally an error message for pdr.get_data_yahoo() may appear on the terminal prompt. Ignore this message and allow the program to run.
