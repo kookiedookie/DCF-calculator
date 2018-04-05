@@ -1,4 +1,4 @@
-﻿UPDATE: As of 5th April 2018, Pandas DataReader for Yahoo Finance has failed indefinitely. This means that Expected Market Returns from SP500 and historical stock prices can no longer be automatically generated, and will return NaN. This is not patched yet. 
+﻿UPDATE: As of 5th April 2018, Pandas DataReader for Yahoo Finance has failed indefinitely. This means that Expected Market Returns from SP500 and Historical Stock Prices can no longer be automatically generated, and will return NaN. This is not patched yet. 
  
  Instructions on operating the DCF calculator application
 
