@@ -31,6 +31,7 @@ class Main(QMainWindow, Ui_MainWindow):
     def PB_C(self,):
     #getting the inputs
         stockticker = self.input_stockticker.text()
+        apikey = self.input_quandl_API_key.text()
         if self.input_forecastedGrowthRate.text() is not '':
             forecasted_growth_rate = float(
                     self.input_forecastedGrowthRate.text())
@@ -43,7 +44,7 @@ class Main(QMainWindow, Ui_MainWindow):
         else:
             perpetual_growth_rate = None
 
-        company = Company(stockticker)
+        company = Company(stockticker,apikey)
         data = company.data
     #generate the outputs
         #ebit - imported as a variable

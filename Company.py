@@ -12,10 +12,11 @@ Created 23 March 2018
 
 #import packages
 import pandas as pd
-import pandas_datareader.data as pdr
+#import pandas_datareader.data as pdr
 import numpy
 from dateutil.relativedelta import relativedelta
 from datetime import datetime
+import quandl
 
     #%%
     #Local Functions
@@ -54,12 +55,13 @@ def arrayRatio(numerator,denominator):
 
 #%%
 #Online data pull function
-def onlinedata(stockticker):
+def onlinedata(stockticker, apikey):
     """
     Returns all financial data from all sources in the form of dictionary
 
     Refer to the return statement for keys and values
     """
+#%%
         #Source 1: yahoo finance
     yahoo_URL = 'https://sg.finance.yahoo.com/quote/'
 
@@ -245,21 +247,27 @@ def onlinedata(stockticker):
         #%%
         #yahoo historical prices
             #standard deviation of adj close prices
-    today = datetime.today()
-    yearsago = today - relativedelta(years=5)
+    todaydate = datetime.today()
+    yearsagodate = todaydate - relativedelta(years=5)
+    today = todaydate.strftime('%Y-%m-%d')
+    yearsago = yearsagodate.strftime('%Y-%m-%d')
     p =[]
     while True:
         try:
             p = numpy.array(
-                    pdr.get_data_yahoo(
-                            stockticker,
-                            yearsago,
-                            interval='m'
-                            )['Adj Close'].tolist())
+                    quandl.get(
+                            ('WIKI/' + stockticker),
+                            start_date = yearsago,
+                            end_date = today,
+                            collapse='monthly',
+                            api_key = apikey
+                            )['Close'].tolist())
             break
         except:
-            print("Error occurred with pdr.get_data_yahoo()" + 
-                  " method for prices, trying again")
+            print("Error occurred on while loop line ~260!" + 
+                  " Trying again")
+            raise
+            
     p = p[~numpy.isnan(p)]
     stdev = numpy.std(p)
 
@@ -270,18 +278,21 @@ def onlinedata(stockticker):
     while True:
         try:
             rmt = numpy.array(
-                    pdr.get_data_yahoo(
-                            '^GSPC',
-                            yearsago,
-                            interval='m'
-                            )['Adj Close'].tolist())
+                    quandl.get(
+                            'ECB/FM_Q_US_USD_DS_EI_S_PCOMP_HSTA',
+                            start_date = yearsago,
+                            end_date = today,
+                            api_key = apikey
+                            )['Points'].tolist())
             break
         except:
-            print("Error occurred with pdr.get_data_yahoo()" +
-                  " method for rm, trying again")
+            print("Error occurred on while loop line ~270!" +
+                  " Trying again")
+            raise
+            
     rmt = rmt[~numpy.isnan(rmt)]
-    rm = numpy.average(numpy.diff(rmt)/rmt[:-1])*12
-    ###alternative formula
+    rm = numpy.average(numpy.diff(rmt)/rmt[:-1])*4 
+    #convert quarterly growth rate to CAGR
     #%%
 
     #Source 2: 3 month T-bills -- https://www.federalreserve.gov/releases/h15/
@@ -320,6 +331,7 @@ def onlinedata(stockticker):
 
  #%%
 class Company:
-    def __init__(self,stockticker):
+    def __init__(self,stockticker,apikey):
         self.stockticker = stockticker
-        self.data = onlinedata(stockticker)
+        self.apikey = apikey
+        self.data = onlinedata(stockticker, apikey)
