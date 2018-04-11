@@ -1,10 +1,8 @@
-﻿UPDATE: As of 5th April 2018, Pandas DataReader for Yahoo Finance has failed indefinitely. This means that Expected Market Returns from SP500 and Historical Stock Prices can no longer be automatically generated, and will return NaN. This is not patched yet. 
- 
- Instructions on operating the DCF calculator application
+﻿UPDATE: Fixed the previously used PandasDataReader (as pdr) pdr.get_data_yahoo() method. It has been substituted by quandl get(). This requires your own quandl API key; you will need to create a free account to get it. [Create a quandl account here](https://www.quandl.com/) 
 
 The zip file contains 4 files (excluding this ReadMe): Main.py, Company.py, dcffunctions.py, qf205guiProject.ui
 
-##### **DISCLAIMER: This calculator is designed to be a informational and educational tool only, and when used alone, do not constitute investment advice. The results presented by this calculator are hypothetical and may not reflect the actual value of stocks. We are not responsible for the consequences of any decisions or actions taken in reliance upon or as a result of the information provided by these tools. We are not responsible for any human or mechanical errors or omissions. Use this at your own risk.**
+##### DISCLAIMER: This calculator is designed to be a informational and educational tool only, and when used alone, do not constitute investment advice. The results presented by this calculator are hypothetical and may not reflect the actual value of stocks. We are not responsible for the consequences of any decisions or actions taken in reliance upon or as a result of the information provided by these tools. We are not responsible for any human or mechanical errors or omissions. Use this at your own risk.
 
 # Getting Started
 1. Download and install Python from this website:
@@ -24,6 +22,8 @@ The zip file contains 4 files (excluding this ReadMe): Main.py, Company.py, dcff
 	6. sys
 	
 	7. PyQt5
+	
+	8. quandl
 	
 	If you are using Anaconda run the command below for each package in the Anaconda Prompt:
 		
@@ -52,13 +52,17 @@ The zip file contains 4 files (excluding this ReadMe): Main.py, Company.py, dcff
 4. Input the Stockticker, Forecasted Growth Rate (optional) and Perpetual Growth Rate (optional). 'AMZN' is the default value as the stockticker; change this for a different stockticker.
 
 	a. An invalid stockticker will cause the program to crash. Please input valid stocktickers
+	
+		i. Invalid stocktickers: AAPL, GOOG, FB, MMM, BNP.PA
+	
+		ii. Valid stocktickers: AMZN, TSLA, XOM
 
 	b. Forecasted Growth Rate and Perpetual Growth Rate are 0.25 and 0.03 respectively by default
 	
 	c. A invalid input on the growth rates (i.e. text format) will cause the program to crash. Please input valid growth rates
 	
-5. Click 'Calculate'. The code will take some time to run. Occasionally an error message for pdr.get_data_yahoo() may appear on the terminal prompt. Ignore this message and allow the program to run.
+5. Click 'Calculate'. The code will take some time to run
 
-6. The program will output the financial results from the valuation algorithm and intermediate financial data from its data sources. 
+6. The program will output the financial results from the valuation algorithm and other financial data from its data sources. 
 
 7. You can run the program again by having other values in the input fields and clicking 'Calculate' again.
