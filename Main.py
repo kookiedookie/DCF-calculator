@@ -14,6 +14,7 @@ from PyQt5.QtWidgets import QMainWindow, QApplication
 from PyQt5 import uic
 from Company import Company
 import dcffunctions as d
+import quandl
 
 qtCreatorFile = "qf205guiProject.ui"
 Ui_MainWindow, QtBaseClass = uic.loadUiType(qtCreatorFile)
@@ -25,13 +26,15 @@ class Main(QMainWindow, Ui_MainWindow):
         self.input_stockticker.setText('AMZN')
         self.input_forecastedGrowthRate.setText('0.25')
         self.input_perpetualGrowthRate.setText('0.03')
+        self.input_quandl_API_key.setText('')
 
         self.pushButton_calculate.clicked.connect(self.PB_C)
 
     def PB_C(self,):
+        #clear recommendation bar
+        self.output_rec.setText('')
     #getting the inputs
         stockticker = self.input_stockticker.text()
-        apikey = self.input_quandl_API_key.text()
         if self.input_forecastedGrowthRate.text() is not '':
             forecasted_growth_rate = float(
                     self.input_forecastedGrowthRate.text())
@@ -43,8 +46,49 @@ class Main(QMainWindow, Ui_MainWindow):
                     self.input_perpetualGrowthRate.text())
         else:
             perpetual_growth_rate = None
-
-        company = Company(stockticker,apikey)
+            
+        if self.input_quandl_API_key.text() is not '':
+            quandl.ApiConfig.api_key = self.input_quandl_API_key.text()
+        else:
+            self.output_rec.setText('Error: Please input an Quandl API Key.'+ 
+                                    ' Go to https://www.quandl.com/')
+            raise
+            exit
+        
+        #test if quandl apikey is valid
+        count = 0
+        while True:
+            try:
+                ignore = quandl.Dataset('WIKI/AAPL').data()
+                break
+            except:
+                count += 1
+                if count >8:
+                    self.output_rec.setText('Error: Invalid Quandl API key. ' +
+                                        'Please check your API key '+
+                                        'and try again')
+                    raise
+                    exit
+                
+        #test if stockticker is valid
+        count = 0
+        while True:
+            try:
+                ignore = quandl.Dataset('WIKI/' + stockticker).data()
+                break
+            except:
+                count += 1
+                if count >8:
+                    self.output_rec.setText('Error: Invalid stockticker.')
+                    raise
+                    exit
+        #except:
+#            self.output_rec.setText('Error: Invalid Quandl API key. ' +
+#                                    'Please check your API key '+
+#                                    'and try again')
+#            exit
+            
+        company = Company(stockticker,quandl.ApiConfig.api_key)
         data = company.data
     #generate the outputs
         #ebit - imported as a variable

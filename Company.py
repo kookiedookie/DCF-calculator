@@ -252,6 +252,7 @@ def onlinedata(stockticker, apikey):
     today = todaydate.strftime('%Y-%m-%d')
     yearsago = yearsagodate.strftime('%Y-%m-%d')
     p =[]
+    count = 0
     while True:
         try:
             p = numpy.array(
@@ -266,7 +267,10 @@ def onlinedata(stockticker, apikey):
         except:
             print("Error occurred on while loop line ~260!" + 
                   " Trying again")
-            raise
+            count += 1
+            if count >8:
+                print("Tried 10 times on line ~260. Stopped.")
+            
             
     p = p[~numpy.isnan(p)]
     stdev = numpy.std(p)
@@ -275,6 +279,7 @@ def onlinedata(stockticker, apikey):
             #Expected market returns: compound annual growth rate of monthly
             #SP500 adj close prices over 5 years
     rmt = []
+    count = 0
     while True:
         try:
             rmt = numpy.array(
@@ -286,9 +291,11 @@ def onlinedata(stockticker, apikey):
                             )['Points'].tolist())
             break
         except:
-            print("Error occurred on while loop line ~270!" +
+            print("Error occurred on while loop line ~285!" +
                   " Trying again")
-            raise
+            count += 1
+            if count >8:
+                print("Tried 10 times on line ~285. Stopped.")            
             
     rmt = rmt[~numpy.isnan(rmt)]
     rm = numpy.average(numpy.diff(rmt)/rmt[:-1])*4 
