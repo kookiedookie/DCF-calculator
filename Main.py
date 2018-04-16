@@ -61,7 +61,13 @@ class Main(QMainWindow, Ui_MainWindow):
         self.clearOutputs()
         
     #getting the inputs and exception handling
-        stockticker = self.input_stockticker.text()
+        if self.input_stockticker.text() is not '':
+            stockticker = self.input_stockticker.text()
+        else:
+            self.output_rec.setText('Error: Please input a stockticker.')
+            raise
+            exit
+
         if self.input_forecastedGrowthRate.text() is not '':
             forecasted_growth_rate = float(
                     self.input_forecastedGrowthRate.text())
@@ -101,7 +107,7 @@ class Main(QMainWindow, Ui_MainWindow):
         count = 0
         while True:
             try:
-                quandl.Dataset('WIKI/' + stockticker).data()
+                ignore = quandl.Dataset('WIKI/' + stockticker).data()
                 break
             except:
                 count += 1
