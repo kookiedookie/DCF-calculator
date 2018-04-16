@@ -30,10 +30,37 @@ class Main(QMainWindow, Ui_MainWindow):
 
         self.pushButton_calculate.clicked.connect(self.PB_C)
 
-    def PB_C(self,):
-        #clear recommendation bar
+    def clearOutputs(self):
+        """ Clears all outputs on GUI. """
         self.output_rec.setText('')
-    #getting the inputs
+        self.output_ebit.setText('') 
+        self.output_tax_rate.setText('')
+        self.output_depr.setText('')
+        self.output_amor.setText('')
+        self.output_capex.setText('')
+        self.output_cwc.setText('')
+        self.output_fcf.setText('')
+        self.output_y0.setText('')
+        self.output_y1.setText('')
+        self.output_y2.setText('')
+        self.output_y3.setText('')
+        self.output_y4.setText('')
+        self.output_y5.setText('')
+        self.output_marketcap.setText('')
+        self.output_beta.setText('')
+        self.output_emr.setText('') 
+        self.output_coe.setText('')
+        self.output_ltd.setText('')
+        self.output_cod.setText('')
+        self.output_wacc.setText('')
+        self.output_dcf.setText('')
+        
+    
+    def PB_C(self,):
+    # clear all outputs
+        self.clearOutputs()
+        
+    #getting the inputs and exception handling
         stockticker = self.input_stockticker.text()
         if self.input_forecastedGrowthRate.text() is not '':
             forecasted_growth_rate = float(
@@ -59,7 +86,7 @@ class Main(QMainWindow, Ui_MainWindow):
         count = 0
         while True:
             try:
-                ignore = quandl.Dataset('WIKI/AAPL').data()
+                quandl.Dataset('WIKI/AAPL').data()
                 break
             except:
                 count += 1
@@ -74,7 +101,7 @@ class Main(QMainWindow, Ui_MainWindow):
         count = 0
         while True:
             try:
-                ignore = quandl.Dataset('WIKI/' + stockticker).data()
+                quandl.Dataset('WIKI/' + stockticker).data()
                 break
             except:
                 count += 1
@@ -82,28 +109,17 @@ class Main(QMainWindow, Ui_MainWindow):
                     self.output_rec.setText('Error: Invalid stockticker.')
                     raise
                     exit
-        #except:
-#            self.output_rec.setText('Error: Invalid Quandl API key. ' +
-#                                    'Please check your API key '+
-#                                    'and try again')
-#            exit
-            
+        
+    #initialise Company object and store 'data' attribute [dict]
         company = Company(stockticker,quandl.ApiConfig.api_key)
         data = company.data
-    #generate the outputs
-        #ebit - imported as a variable
-        self.output_ebit.setText(d.convert(data['lastebit'])) 
+        
+        
+    # Calculations using Company data and dcffunctions
         #tax rate
         atr = d.avg_tax_rate(data['taxexp'],data['ebt'])
-        self.output_tax_rate.setText(str(round(atr,4)))
-        #depreciation and amortization - imported as a variable
-        self.output_depr.setText(d.convert(data['dep']))
-        self.output_amor.setText(d.convert(data['amor']))
-        #capital expenditure - imported as a variable
-        self.output_capex.setText(d.convert(data['capex']))
         #change in networking capital
         cwc = d.cwc(data['ybca'],data['yeca'],data['ybcl'],data['yecl'])
-        self.output_cwc.setText(d.convert(cwc))
         #fcf valuation
         fcf = d.fcf(data['lastebit'],
                     atr,
@@ -111,7 +127,6 @@ class Main(QMainWindow, Ui_MainWindow):
                     data['amor'],
                     cwc,
                     data['capex'])
-        self.output_fcf.setText(d.convert(fcf))
         #5 years free cash flow 
         #outputs all five years as a tuple 
         #(convert to list, then return individual years)
@@ -120,6 +135,41 @@ class Main(QMainWindow, Ui_MainWindow):
             fiveyearfcf = d.five_year_fcf(fcf)
         else:
             fiveyearfcf = d.five_year_fcf(fcf,forecasted_growth_rate)
+        #cost of equity
+        re = d.re(data['rm'],data['rf'],data['beta'])
+        #cost of debt
+        rd = d.rd(data['intexp'],data['LTD'])
+        #weighted average cost of capital
+        wacc = d.wacc(data['marketcap'],data['lastD'],atr,re,rd)
+        #terminal value - not part of ui, but included in calculation
+        tv = 0
+        if perpetual_growth_rate is None:
+            tv = d.tv(fiveyearfcf,wacc)
+        else:
+            tv = d.tv(fiveyearfcf,wacc, perpetual_growth_rate)
+        #discounted cash flow for the current year
+        dcf = d.dcf(fiveyearfcf,wacc,tv)
+        #target price - not part of ui, but included in calculation
+        target_price = d.target_price(dcf,data['lastD'],data['numshares'])
+        #recommendation
+        rec = d.recommendation(
+                data['current_price'],data['stdev'],target_price)
+        
+        
+        
+
+        
+    #generate the outputs
+        #ebit - imported as a variable
+        self.output_ebit.setText(d.convert(data['lastebit'])) 
+        self.output_tax_rate.setText(str(round(atr,4)))
+        #depreciation and amortization - imported as a variable
+        self.output_depr.setText(d.convert(data['dep']))
+        self.output_amor.setText(d.convert(data['amor']))
+        #capital expenditure - imported as a variable
+        self.output_capex.setText(d.convert(data['capex']))
+        self.output_cwc.setText(d.convert(cwc))
+        self.output_fcf.setText(d.convert(fcf))
         self.output_y0.setText(d.convert(fiveyearfcf[0]))
         self.output_y1.setText(d.convert(fiveyearfcf[1]))
         self.output_y2.setText(d.convert(fiveyearfcf[2]))
@@ -132,31 +182,12 @@ class Main(QMainWindow, Ui_MainWindow):
         self.output_beta.setText(str(data['beta']))
         #expected market returns - imported as a variable
         self.output_emr.setText(str(round(data['rm'],4))) 
-        #cost of equity
-        re = d.re(data['rm'],data['rf'],data['beta'])
         self.output_coe.setText(str(round(re,4)))
         #total long term debt - imported as a variable
         self.output_ltd.setText(d.convert(data['lastD']))
-        #cost of debt
-        rd = d.rd(data['intexp'],data['LTD'])
         self.output_cod.setText(str(round(rd,4)))
-        #weighted average cost of capital
-        wacc = d.wacc(data['marketcap'],data['lastD'],atr,re,rd)
         self.output_wacc.setText(str(round(wacc,4)))
-        #terminal value - not part of ui, but included in calculation
-        tv = 0
-        if perpetual_growth_rate is None:
-            tv = d.tv(fiveyearfcf,wacc)
-        else:
-            tv = d.tv(fiveyearfcf,wacc, perpetual_growth_rate)
-        #discounted cash flow for the current year
-        dcf = d.dcf(fiveyearfcf,wacc,tv)
         self.output_dcf.setText(d.convert(dcf))
-        #target price - not part of ui, but included in calculation
-        target_price = d.target_price(dcf,data['lastD'],data['numshares'])
-        #recommendation
-        rec = d.recommendation(
-                data['current_price'],data['stdev'],target_price)
         self.output_rec.setText(rec) #insertPlainText
 
 
